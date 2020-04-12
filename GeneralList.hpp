@@ -111,10 +111,12 @@ class List {
 
 		//CONVERT THIS FUNCTION
 		void pop_back() {
-			Llist *back_to_remove = _back;
+			Dlist *back_to_remove = _back;
+			_back = _back->prev;
 
-			if(_front->next!=nullptr) {
-				Llist *new_back = _front;
+			if(_back==nullptr) {
+				_front = nullptr;
+				Dlist *new_back = _front;
 				while(new_back->next!=_back) {
 					new_back=new_back->next;
 				}
@@ -122,8 +124,8 @@ class List {
 				_back=new_back;
 			}
 			else {
-				_front=nullptr;
-				_back=nullptr;
+				//_front = nullptr;
+				_back->next = nullptr;
 			}
 
 			delete back_to_remove;
@@ -137,10 +139,51 @@ class List {
 
 		//Modify this
 		void print() {
-			Llist *temp;
+			Dlist *temp;
 			for(temp=_front; temp!=nullptr; temp=temp->next) {
 				std::cout << temp->value << " ";
-			}
+				}
 			std::cout << std::endl;
 		}
+		template<typename V> friend bool operator == (const List<V> &a, const List<V> &b);
+		template<typename V> friend bool operator != (const List<V> &a, const List<V> &b);
 };
+
+template<typename V> bool operator==(const List<V> &a, const List<V> &b){
+	for(auto tempa = a._front, tempb = b._front; (tempa != nullptr) || (tempb != nullptr);
+	tempa=tempa->next, tempb = tempb->next){
+
+		if(tempa->value != tempb->value){
+			return false;
+
+		}
+	}
+
+	if(a.size() != b.size()){
+		return false;
+	}
+	else{
+		return true;
+	}
+}
+
+template<typename V> bool operator != (const List<V> &a, const List<V> &b){
+	
+	for(auto tempa = a._front, tempb = b._front; (tempa != nullptr) || (tempb != nullptr);
+	tempa=tempa->next, tempb = tempb->next){
+
+		if(tempa->value != tempb->value){
+			return false;
+		}
+	}
+
+	if(a.size() != b.size()){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+	
+
+
